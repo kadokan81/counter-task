@@ -57,7 +57,7 @@ function App() {
 									? { background: 'red' }
 									: {}
 							}
-							value={maxValue || ''}
+							value={maxValue}
 							onChange={(e) => setMaxValue(Math.round(e.target.valueAsNumber))}
 							onClick={() => {
 								setDisplayCounter(false);
@@ -76,7 +76,7 @@ function App() {
 									: {}
 							}
 							id='start-value'
-							value={startValue || ''}
+							value={startValue}
 							onChange={(e) =>
 								setStartValue(Math.round(e.target.valueAsNumber))
 							}
@@ -90,7 +90,12 @@ function App() {
 				</div>
 				<div className='button-group'>
 					<ButtonComponent
-						disabled={!startValue || !maxValue || isInitDataIsWrong}
+						disabled={
+							startValue < 0 ||
+							isNaN(startValue) ||
+							!maxValue ||
+							isInitDataIsWrong
+						}
 						onClick={setInitialCounterData}>
 						set
 					</ButtonComponent>
