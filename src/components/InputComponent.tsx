@@ -1,4 +1,4 @@
-import { ComponentPropsWithoutRef, FC, useState } from 'react';
+import { ComponentPropsWithoutRef, FC } from 'react';
 
 interface InputComponent extends ComponentPropsWithoutRef<'input'> {
 	inputType: string;

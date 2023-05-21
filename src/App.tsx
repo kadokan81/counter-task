@@ -38,7 +38,7 @@ function App() {
 
 	const setInitialCounterData = () => {
 		if (maxValue > 1 || startValue > 0) {
-			setCounter(startValue);
+			setCounter(Math.round(startValue));
 			setDisplayCounter(true);
 			return;
 		}
@@ -58,7 +58,7 @@ function App() {
 									: {}
 							}
 							value={maxValue || ''}
-							onChange={(e) => setMaxValue(e.target.valueAsNumber)}
+							onChange={(e) => setMaxValue(Math.round(e.target.valueAsNumber))}
 							onClick={() => {
 								setDisplayCounter(false);
 								setDisableResetButton(true);
@@ -77,7 +77,9 @@ function App() {
 							}
 							id='start-value'
 							value={startValue || ''}
-							onChange={(e) => setStartValue(e.target.valueAsNumber)}
+							onChange={(e) =>
+								setStartValue(Math.round(e.target.valueAsNumber))
+							}
 							onClick={() => {
 								setDisplayCounter(false);
 								setDisableResetButton(true);
