@@ -2,28 +2,29 @@ import { useState } from 'react';
 import './App.css';
 import { ButtonComponent } from './components/ButtonComponent';
 import { useLocalStorage } from './hooks/useLocalStorage';
+import { InputComponent } from './components/InputComponent';
 
 function App() {
-	const [limitCounter, setLimitCounter] = useLocalStorage('limitCounter', 5);
+	const [maxValue, setMaxValue] = useLocalStorage('maxValue', 5);
 	const [startValue, setStartValue] = useLocalStorage('startValue', 0);
-
 	const [counter, setCounter] = useState(startValue);
-	const [isLimit, setIsLimit] = useState(false);
+
 	const [disableResetButton, setDisableResetButton] = useState(true);
 	const [displayCounter, setDisplayCounter] = useState(false);
 
+	const isCounterReachLimit = counter === maxValue;
 	const isStartValueIsWrong = startValue < 0;
-	const isLimitCounterValueIsWrong = limitCounter < 0;
+	const isMaxValueValueIsWrong = maxValue < 1;
+
 	const isInitDataIsWrong =
-		limitCounter < 0 || startValue < 0 || startValue >= limitCounter;
+		maxValue < 1 || startValue < 0 || startValue >= maxValue;
 
 	const incrementClickHandler = () => {
 		if (disableResetButton) {
 			setDisableResetButton(false);
 		}
-		if (counter >= limitCounter - 1) {
+		if (counter >= maxValue - 1) {
 			setCounter((counter) => counter + 1);
-			setIsLimit(true);
 		} else {
 			setCounter((counter) => counter + 1);
 		}
@@ -31,15 +32,17 @@ function App() {
 
 	const resetButtonHandler = () => {
 		setCounter(startValue);
-		setIsLimit(false);
+
 		setDisableResetButton(true);
 	};
 
 	const setInitialCounterData = () => {
-		setStartValue((prev) => prev);
-		setLimitCounter((prev) => prev);
-		setCounter(startValue);
-		setDisplayCounter(true);
+		if (maxValue > 1 || startValue > 0) {
+			setCounter(startValue);
+			setDisplayCounter(true);
+			return;
+		}
+		setDisplayCounter(false);
 	};
 
 	return (
@@ -50,12 +53,12 @@ function App() {
 						<label htmlFor='max-number'>max value :</label>
 						<input
 							style={
-								isLimitCounterValueIsWrong || startValue >= limitCounter
+								isMaxValueValueIsWrong || startValue >= maxValue
 									? { background: 'red' }
 									: {}
 							}
-							value={limitCounter}
-							onChange={(e) => setLimitCounter(e.target.valueAsNumber)}
+							value={maxValue || ''}
+							onChange={(e) => setMaxValue(e.target.valueAsNumber)}
 							onClick={() => {
 								setDisplayCounter(false);
 								setDisableResetButton(true);
@@ -68,12 +71,12 @@ function App() {
 						<label htmlFor='start-value'>start value</label>
 						<input
 							style={
-								isStartValueIsWrong || startValue >= limitCounter
+								isStartValueIsWrong || startValue >= maxValue
 									? { background: 'red' }
 									: {}
 							}
 							id='start-value'
-							value={startValue}
+							value={startValue || ''}
 							onChange={(e) => setStartValue(e.target.valueAsNumber)}
 							onClick={() => {
 								setDisplayCounter(false);
@@ -85,16 +88,19 @@ function App() {
 				</div>
 				<div className='button-group'>
 					<ButtonComponent
-						disabled={isInitDataIsWrong}
+						disabled={!startValue || !maxValue || isInitDataIsWrong}
 						onClick={setInitialCounterData}>
 						set
 					</ButtonComponent>
 				</div>
 			</div>
 			<div className='frame'>
-				<div className={!isLimit ? 'counter-screen' : 'counter-screen__red'}>
+				<div
+					className={
+						!isCounterReachLimit ? 'counter-screen' : 'counter-screen__red'
+					}>
 					{!displayCounter ? (
-						isLimitCounterValueIsWrong ||
+						isMaxValueValueIsWrong ||
 						isStartValueIsWrong ||
 						isInitDataIsWrong ? (
 							<p style={{ fontSize: '18px', color: 'red' }}>incorrect value</p>
@@ -107,7 +113,9 @@ function App() {
 				</div>
 				<div className='button-group'>
 					<ButtonComponent
-						disabled={isLimit || isStartValueIsWrong || !displayCounter}
+						disabled={
+							isCounterReachLimit || isStartValueIsWrong || !displayCounter
+						}
 						onClick={incrementClickHandler}>
 						inc
 					</ButtonComponent>
