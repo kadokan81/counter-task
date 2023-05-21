@@ -35,7 +35,6 @@ function App() {
 
 	const resetButtonHandler = () => {
 		setCounter(startValue);
-
 		setDisableResetButton(true);
 	};
 
@@ -43,6 +42,7 @@ function App() {
 		if (maxValue > 1 || startValue > 0) {
 			setCounter(Math.round(startValue));
 			setDisplayCounter(true);
+			setDisableResetButton(true);
 			return;
 		}
 		setDisplayCounter(false);
