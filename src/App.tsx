@@ -19,6 +19,9 @@ function App() {
 	const isInitDataIsWrong =
 		maxValue < 1 || startValue < 0 || startValue >= maxValue;
 
+	const isSetButtonDisable =
+		startValue < 0 || isNaN(startValue) || !maxValue || isInitDataIsWrong;
+
 	const incrementClickHandler = () => {
 		if (disableResetButton) {
 			setDisableResetButton(false);
@@ -90,12 +93,7 @@ function App() {
 				</div>
 				<div className='button-group'>
 					<ButtonComponent
-						disabled={
-							startValue < 0 ||
-							isNaN(startValue) ||
-							!maxValue ||
-							isInitDataIsWrong
-						}
+						disabled={isSetButtonDisable}
 						onClick={setInitialCounterData}>
 						set
 					</ButtonComponent>
