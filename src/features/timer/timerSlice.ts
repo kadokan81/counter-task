@@ -1,53 +1,54 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import { log } from 'console';
 
 export type initTimerType = {
 	maxValue: number;
 	startValue: number;
 	counter: number;
-	disableResetButton: boolean;
-	displayCounter: boolean;
 	isError: boolean;
+	isErrorText: string;
 };
 
 const initialState = {
 	maxValue: 5,
 	startValue: 0,
 	counter: 0,
-	disableResetButton: true,
-	displayCounter: false,
 	isError: false,
+	isErrorText: '',
 };
 
 export const timerSlice = createSlice({
 	name: 'timer',
 	initialState,
 	reducers: {
+		setMaxAndStartSlice: (
+			st,
+			action: PayloadAction<{ maxValue: number; startValue: number }>
+		) => {
+			if (action.payload.maxValue <= 0) {
+				st.isError = true;
+				st.isErrorText = 'Max value cant be lower than 1';
+				return;
+			}
+			if (action.payload.startValue < 0) {
+				st.isError = true;
+				st.isErrorText = 'Start value cant be lower than 0';
+				return;
+			}
+			if (action.payload.maxValue <= action.payload.startValue) {
+				st.isError = true;
+				st.isErrorText = 'Max value cant be lower or even start value';
+				return;
+			}
+			st.maxValue = action.payload.maxValue;
+			st.startValue = action.payload.startValue;
+			st.counter = action.payload.startValue;
+			st.isError = false;
+			st.isErrorText = '';
+		},
 		incrementCounterSlice: (st) => {
 			st.counter = ++st.counter;
 		},
-		setMaxValueSlice: (st, action: PayloadAction<number>) => {
-			if (action.payload <= 1) {
-				st.isError = true;
-				return;
-			}
-			console.log(action.payload);
-			if (st.maxValue <= st.startValue) {
-				st.isError = true;
-				st.maxValue = action.payload;
-			}
-			st.maxValue = action.payload;
-			st.isError = false;
-		},
-		setStartValueSlice: (st, action: PayloadAction<number>) => {
-			if (action.payload < 0 || action.payload >= st.maxValue) {
-				st.isError = true;
-				return;
-			}
-			st.startValue = action.payload;
-			st.counter = action.payload;
-			st.isError = false;
-		},
+
 		resetValueSlice: (st) => {
 			return {
 				...st,
@@ -60,10 +61,6 @@ export const timerSlice = createSlice({
 	},
 });
 
-export const {
-	setMaxValueSlice,
-	setStartValueSlice,
-	incrementCounterSlice,
-	resetValueSlice,
-} = timerSlice.actions;
+export const { incrementCounterSlice, resetValueSlice, setMaxAndStartSlice } =
+	timerSlice.actions;
 export default timerSlice.reducer;
