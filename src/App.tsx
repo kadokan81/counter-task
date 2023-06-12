@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './App.css';
 import { ButtonComponent } from './components/ButtonComponent';
 import { useLocalStorage } from './hooks/useLocalStorage';
@@ -18,6 +18,10 @@ function App() {
 
 	const [maxValue, setMaxValue] = useLocalStorage('maxValue', 5);
 	const [startValue, setStartValue] = useLocalStorage('startValue', 0);
+
+	useEffect(() => {
+		dispatch(setMaxAndStartSlice({ maxValue, startValue }));
+	}, []);
 
 	const [disableResetButton, setDisableResetButton] = useState(true);
 	const [displayCounter, setDisplayCounter] = useState(true);

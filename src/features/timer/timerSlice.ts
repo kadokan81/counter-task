@@ -9,7 +9,7 @@ export type initTimerType = {
 };
 
 const initialState = {
-	maxValue: 5,
+	maxValue: 1,
 	startValue: 0,
 	counter: 0,
 	isError: false,
