@@ -8,7 +8,7 @@ export type initTimerType = {
 	isErrorText: string;
 };
 
-const initialState = {
+const initialState: initTimerType = {
 	maxValue: 1,
 	startValue: 0,
 	counter: 0,
@@ -21,29 +21,29 @@ export const timerSlice = createSlice({
 	initialState,
 	reducers: {
 		setMaxAndStartSlice: (
-			st,
+			state,
 			action: PayloadAction<{ maxValue: number; startValue: number }>
 		) => {
 			if (action.payload.maxValue <= 0) {
-				st.isError = true;
-				st.isErrorText = 'Max value cant be lower than 1';
+				state.isError = true;
+				state.isErrorText = 'Max value cant be lower than 1';
 				return;
 			}
 			if (action.payload.startValue < 0) {
-				st.isError = true;
-				st.isErrorText = 'Start value cant be lower than 0';
+				state.isError = true;
+				state.isErrorText = 'Start value cant be lower than 0';
 				return;
 			}
 			if (action.payload.maxValue <= action.payload.startValue) {
-				st.isError = true;
-				st.isErrorText = 'Max value cant be lower or even start value';
+				state.isError = true;
+				state.isErrorText = 'Max value cant be lower or even start value';
 				return;
 			}
-			st.maxValue = action.payload.maxValue;
-			st.startValue = action.payload.startValue;
-			st.counter = action.payload.startValue;
-			st.isError = false;
-			st.isErrorText = '';
+			state.maxValue = action.payload.maxValue;
+			state.startValue = action.payload.startValue;
+			state.counter = action.payload.startValue;
+			state.isError = false;
+			state.isErrorText = '';
 		},
 		incrementCounterSlice: (st) => {
 			st.counter = ++st.counter;
@@ -64,3 +64,5 @@ export const timerSlice = createSlice({
 export const { incrementCounterSlice, resetValueSlice, setMaxAndStartSlice } =
 	timerSlice.actions;
 export default timerSlice.reducer;
+// export const  {actions: timerSliceActions} = timerSlice
+// export const  {reducer: timerSliceReducer } = timerSlice

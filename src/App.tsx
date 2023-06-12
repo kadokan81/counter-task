@@ -2,9 +2,8 @@ import { useEffect, useState } from 'react';
 import './App.css';
 import { ButtonComponent } from './components/ButtonComponent';
 import { useLocalStorage } from './hooks/useLocalStorage';
-import { InputComponent } from './components/InputComponent';
-import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from './store';
+
+import { useAppDispatch, useAppSelector } from './store';
 import {
 	incrementCounterSlice,
 	resetValueSlice,
@@ -12,16 +11,16 @@ import {
 } from './features/timer/timerSlice';
 
 function App() {
-	const initSt = useSelector((state: RootState) => state.timerState);
+	const initSt = useAppSelector((state) => state.timerState);
 
-	const dispatch: AppDispatch = useDispatch();
+	const dispatch = useAppDispatch();
 
 	const [maxValue, setMaxValue] = useLocalStorage('maxValue', 5);
 	const [startValue, setStartValue] = useLocalStorage('startValue', 0);
 
 	useEffect(() => {
 		dispatch(setMaxAndStartSlice({ maxValue, startValue }));
-	}, []);
+	}, [dispatch, maxValue, startValue]);
 
 	const [disableResetButton, setDisableResetButton] = useState(true);
 	const [displayCounter, setDisplayCounter] = useState(true);
@@ -38,13 +37,24 @@ function App() {
 
 	const resetButtonHandler = () => {
 		dispatch(resetValueSlice());
-
 		setDisableResetButton(true);
 	};
 
 	const setInitialCounterData = () => {
 		dispatch(setMaxAndStartSlice({ maxValue, startValue }));
 		setDisplayCounter(false);
+	};
+
+	const getCounterView = (): JSX.Element => {
+		// displayCounter ? (
+		// 	<p style={{ fontSize: '18px' }}>enter value and press "set"</p>
+		// ) : initSt.isError ? (
+		// 	<p style={{ fontSize: '15px', color: 'red' }}>
+		// 		{initSt.isErrorText}
+		// 	</p>
+		// ) : (
+		// 	initSt.counter
+		return <div />;
 	};
 
 	return (
@@ -102,6 +112,8 @@ function App() {
 					) : (
 						initSt.counter
 					)}
+
+					{getCounterView()}
 				</div>
 				<div className='button-group'>
 					<ButtonComponent
